@@ -16,7 +16,17 @@
               .extern _NearBaseAddress
 #endif
 
-              .section start
+;;; **** Auto open Amiga library
+autoOpen:     .macro  lib
+              .section start, noroot, noreorder
+              .pubweak __call_initialize_\lib
+              .extern  __initialize_\lib
+__call_initialize_\lib:
+              jsr     __initialize_\lib
+              .endm
+
+
+              .section start, noroot, noreorder
               .public __program_root_section
               .public __program_start
               .align  2
@@ -27,13 +37,17 @@ __program_start:
 #endif
 ;;; Initialize data sections if needed.
               .section start, noroot, noreorder
-              .public __data_initialization_needed
+              .pubweak __data_initialization_needed
               .extern __initialize_sections
-              .align  2
 __data_initialization_needed:
               move.l  #(.sectionStart data_init_table),a0
               move.l  #(.sectionEnd data_init_table),a1
               jsr     __initialize_sections
+
+;;; **** Auto open Amiga libraries
+              autoOpen DOSLibrary
+              autoOpen IntuitionLibrary
+              autoOpen GfxLibrary
 
 ;;; **** Initialize streams if needed.
               .section start, noroot, noreorder
