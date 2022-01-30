@@ -1,6 +1,6 @@
 VPATH = src
 
-CFLAGS = -I /home/hth/Documents/Amiga/NDK3.2/Include_H --fd /home/hth/Documents/Amiga/NDK3.2/FD
+CFLAGS = -I /home/hth/Documents/Amiga/NDK3.2/Include_H --fd /home/hth/Documents/Amiga/NDK3.2/FD --weak-symbols
 
 # Library products
 ALL_LIBS = Amiga-68000-sc-sd.a Amiga-68000-lc-sd.a \
