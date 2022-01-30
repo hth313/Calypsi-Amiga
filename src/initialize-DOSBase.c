@@ -12,7 +12,7 @@ static void closeDosLibrary () {
   CloseLibrary((struct Library*)DOSBase);
 }
 
-void __initialize_DOSLibray () {
+void __initialize_DOSLibrary () {
   if ((DOSBase = (struct DosLibrary*)OpenLibrary((CONST_STRPTR)"dos.library", 0))) {
     atexit(closeDosLibrary);
   } else {

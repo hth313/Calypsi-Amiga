@@ -13,7 +13,7 @@ static void closeGfxLibrary () {
   CloseLibrary((struct Library*)IntutionBase);
 }
 
-void __initialize_IntutionLibray () {
+void __initialize_IntutionLibrary () {
   if ((IntutionBase = (struct IntutionLibrary*)OpenLibrary((CONST_STRPTR)"intution.library", 0))) {
     atexit(closeGfxLibrary);
   } else {
