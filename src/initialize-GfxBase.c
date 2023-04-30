@@ -1,20 +1,20 @@
-// This module auto opens intuition.library
+// This module auto opens graphics.library
 
 #include <stdlib.h>
-#include <clib/exec_protos.h>
-#include <clib/graphics_protos.h>
+#include <proto/exec.h>
+#include <proto/graphics.h>
 
 #pragma require __call_initialize_GfxLibrary
 #pragma amiga library exec
 
-struct IntutionLibrary *IntutionBase;
+struct GfxBase * GfxBase;
 
 static void closeGfxLibrary () {
-  CloseLibrary((struct Library*)IntutionBase);
+  CloseLibrary((struct Library*)GfxBase);
 }
 
-void __initialize_IntutionLibrary () {
-  if ((IntutionBase = (struct IntutionLibrary*)OpenLibrary((CONST_STRPTR)"intution.library", 0))) {
+void __initialize_GfxLibrary () {
+  if ((GfxBase = (struct GfxBase*)OpenLibrary((CONST_STRPTR)"graphics.library", 0))) {
     atexit(closeGfxLibrary);
   } else {
     exit(10);

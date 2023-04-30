@@ -1,7 +1,8 @@
 // This module auto opens dos.library
 
 #include <stdlib.h>
-#include <clib/exec_protos.h>
+#include <proto/exec.h>
+#include <proto/dos.h>
 
 #pragma require __call_initialize_DOSLibrary
 #pragma amiga library exec

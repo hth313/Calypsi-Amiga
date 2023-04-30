@@ -1,8 +1,8 @@
 // This module auto opens intuition.library
 
 #include <stdlib.h>
-#include <clib/exec_protos.h>
-#include <clib/intuition_protos.h>
+#include <proto/exec.h>
+#include <proto/intuition.h>
 
 #pragma require __call_initialize_IntuitionLibrary
 #pragma amiga library exec
