@@ -6,7 +6,6 @@
               ;; External declarations
               .section sstack
               .section stack
-              .section heap
               .section data_init_table
 
               .extern __initialize_data, __initialize_udata
@@ -61,12 +60,26 @@ __call_initialize_global_streams:
               .pubweak __call_heap_initialize
               .extern __heap_initialize, __default_heap
 __call_heap_initialize:
-              move.l  #.sectionSize heap,d0
+	      jsr     __heap_chunk_size
               move.l  #__default_heap,a0
-              move.l  #.sectionStart heap,a1
               jsr     __heap_initialize
 
               .section start, root, noreorder
               moveq.l #0,d0         ; argc = 0
               jsr     main
               jmp     exit
+
+;;; Default chunk size for the heap, this allows for 32K x 32 = 1MB. You can increase
+;;; or reduce this to suit your needs by defining your own __heap_chunk_size()
+;;; function which will replace this weak one.
+
+	      .section nearcode
+#ifdef __CALYPSI_CODE_MODEL_SMALL__
+	      .section nearcode
+#else
+	      .section code
+#endif
+	      .pubweak __heap_chunk_size
+__heap_chunk_size:
+	      move.l  #32768,d0
+	      rts
