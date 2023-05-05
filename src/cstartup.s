@@ -69,9 +69,10 @@ __call_heap_initialize:
               jsr     main
               jmp     exit
 
-;;; Default chunk size for the heap, this allows for 32K x 32 = 1MB. You can increase
-;;; or reduce this to suit your needs by defining your own __heap_chunk_size()
-;;; function which will replace this weak one.
+;;; Initial chunk size for the heap. If you know you use very little
+;;; heap you add a function __heap_chunk_size that returns a smaller
+;;; number. If you know you are going to use a lot of heap, you can
+;;; instead start with a larger number.
 
 	      .section nearcode
 #ifdef __CALYPSI_CODE_MODEL_SMALL__
@@ -81,5 +82,5 @@ __call_heap_initialize:
 #endif
 	      .pubweak __heap_chunk_size
 __heap_chunk_size:
-	      move.l  #32768,d0
+	      move.l  #8192,d0
 	      rts
