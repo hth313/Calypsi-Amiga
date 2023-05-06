@@ -9,7 +9,7 @@
               .section data_init_table
 
               .extern __initialize_data, __initialize_udata
-              .extern main, exit
+              .extern main, exit, __original_sp
 
 #ifdef __CALYPSI_DATA_MODEL_SMALL__
               .extern _NearBaseAddress
@@ -43,6 +43,11 @@ __data_initialization_needed:
               move.l  #(.sectionEnd data_init_table),a1
               jsr     __initialize_sections
 
+#ifdef __CALYPSI_DATA_MODEL_SMALL__
+	      move.l  sp,(.near __original_sp,a4)
+#else
+	      move.l  sp,__original_sp
+#endif
 ;;; **** Auto open Amiga libraries
               autoOpen DOSLibrary
               autoOpen IntuitionLibrary
@@ -74,7 +79,6 @@ __call_heap_initialize:
 ;;; number. If you know you are going to use a lot of heap, you can
 ;;; instead start with a larger number.
 
-	      .section nearcode
 #ifdef __CALYPSI_CODE_MODEL_SMALL__
 	      .section nearcode
 #else
@@ -84,3 +88,26 @@ __call_heap_initialize:
 __heap_chunk_size:
 	      move.l  #8192,d0
 	      rts
+
+	      .pubweak _Stub_exit
+#ifdef __CALYPSI_DATA_MODEL_SMALL__
+	      .section znear,bss
+	      .public __original_sp
+	      .align  2
+__original_sp:
+	      .space  4
+	      .section nearcode
+_Stub_exit:
+	      move.l  (.near __original_sp,a4),sp
+	      rts
+#else
+	      .section zfar,bss
+	      .public __original_sp
+	      .align  2
+__original_sp:
+	      .space  4
+	      .section code
+_Stub_exit:
+	      move.l  __original_sp,sp
+	      rts
+#endif
