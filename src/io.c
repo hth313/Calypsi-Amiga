@@ -2,8 +2,8 @@
 #include <dos/dos.h>
 #include <exec/lists.h>
 #include <exec/nodes.h>
-#include <proto/dos.h>
 #include <proto/exec.h>
+#include <proto/dos.h>
 #include <calypsi/stubs.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -11,16 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "io.h"
-
-#define DescriptorsInRecord 32
-
-struct __io_descriptors {
-  struct MinNode node;
-  int used;
-  BPTR desc[DescriptorsInRecord];
-};
-
-struct MinList __descriptor_list;
 
 int _Stub_open(const char *path, int oflag, ...) {
   int desc = -1;
@@ -67,29 +57,4 @@ int _Stub_open(const char *path, int oflag, ...) {
   *storage = handle;
   node-> used += 1;
   return desc;
-}
-
-int _Stub_close(int fd) {
-  int offset = 3;
-  BPTR fdesc;
-  for (struct __io_descriptors *p =
-           (struct __io_descriptors *)__descriptor_list.mlh_Head;
-       p != 0;
-       p = (struct __io_descriptors *)p->node.mln_Succ,
-	 offset += DescriptorsInRecord) {
-    int i = fd - offset;
-    if (i + DescriptorsInRecord) {
-      if (p->desc[i]) {
-        Close(p->desc[i]);
-        p->desc[i] = 0;
-        p->used -= 1;
-	return 0;
-      } else {
-	break;
-      }
-    }
-  }
-  // File does not exist
-  __set_errno(ENOENT);
-  return -1;
 }
