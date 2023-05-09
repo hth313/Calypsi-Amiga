@@ -1,10 +1,14 @@
 #include "io.h"
+#include <proto/dos.h>
 
 int __get_file_handle(int fd) {
   if (fd < 3) {
-
+    if (fd == 0) {
+      return Input();
+    } else {
+      return Output();
+    }
   } else {
-
     int offset = 3;
     BPTR fdesc;
     for (struct __io_descriptors *p =
