@@ -13,7 +13,9 @@ ALL_LIBS = Amiga-68000-sc-sd.a Amiga-68000-lc-sd.a \
 # Common source files
 ASM_SRCS = cstartup.s
 C_SRCS = initialize-DOSBase.c initialize-IntuitionBase.c initialize-GfxBase.c \
-         io.c stdio_translateioerror.c
+         open.c stdio_translateioerror.c close.c fgetpos.c fsetpos.c \
+	 get_file_handle.c getenv.c io_descriptor.c read.c remove.c \
+	 rename.c seek.c write.c
 
 # Object files
 OBJS_68000_SC_SD = $(ASM_SRCS:%.s=%-68000-sc-sd.o) $(C_SRCS:%.c=%-68000-sc-sd.o)
