@@ -5,8 +5,10 @@ int __get_file_handle(int fd) {
   if (fd < 3) {
     if (fd == 0) {
       return Input();
-    } else {
+    } else if (fd == 1) {
       return Output();
+    } else {
+      return ErrorOutput();
     }
   } else {
     int offset = 3;
