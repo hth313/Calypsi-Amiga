@@ -70,7 +70,26 @@ __call_heap_initialize:
               jsr     __heap_initialize
 
               .section start, root, noreorder
-              moveq.l #0,d0         ; argc = 0
+	      .extern __descriptor_list     ; initialize file descriptor list
+#ifdef __CALYPSI_DATA_MODEL_SMALL__
+	      move.l   (.near __descriptor_list,a4),a0
+#else
+	      move.l   __descriptor_list,a0
+#endif
+	      move.l   a0,8(a0)
+	      addq.l   #4,a0
+	      clr.l    (a0)
+	      move.l   a0,-(a0)
+
+	      .extern __argc, __argv, __arg_setup
+	      jsr     __arg_setup           ; set up arguments for main()
+#ifdef __CALYPSI_DATA_MODEL_SMALL__
+	      move.l  (.near __argv,a4),a0
+	      move.l  (.near __argc,a4),d0
+#else
+	      move.l  __argv,a0
+	      move.l  __argc,d0
+#endif
               jsr     main
               jmp     exit
 
