@@ -15,15 +15,24 @@
               .extern _NearBaseAddress
 #endif
 
+#ifdef __CALYPSI_CODE_MODEL_SMALL__
+#define call bsr.w
+#define jump bra.w
+#define libcode nearcode
+#else
+#define call jsr
+#define jump jmp
+#define libcode code
+#endif
+
 ;;; **** Auto open Amiga library
 autoOpen:     .macro  lib
               .section start, noroot, noreorder
               .pubweak __call_initialize_\lib
               .extern  __initialize_\lib
 __call_initialize_\lib:
-              jsr     __initialize_\lib
+	      call    __initialize_\lib
               .endm
-
 
               .section start, noroot, noreorder
               .public __program_root_section
@@ -41,7 +50,7 @@ __program_start:
 __data_initialization_needed:
               move.l  #(.sectionStart data_init_table),a0
               move.l  #(.sectionEnd data_init_table),a1
-              jsr     __initialize_sections
+	      call    __initialize_sections
 
 #ifdef __CALYPSI_DATA_MODEL_SMALL__
 	      move.l  sp,(.near __original_sp,a4)
@@ -58,31 +67,36 @@ __data_initialization_needed:
               .pubweak __call_initialize_global_streams
               .extern __initialize_global_streams
 __call_initialize_global_streams:
-              jsr     __initialize_global_streams
+              call     __initialize_global_streams
 
 ;;; **** Initialize heap if needed.
               .section start, noroot, noreorder
               .pubweak __call_heap_initialize
               .extern __heap_initialize, __default_heap
 __call_heap_initialize:
-	      jsr     __heap_chunk_size
-              move.l  #__default_heap,a0
-              jsr     __heap_initialize
+	      call    __heap_chunk_size
+#ifdef __CALYPSI_DATA_MODEL_SMALL__
+	      lea     (.near __default_heap,a4),a0
+#else
+	      lea     __default_heap,a0
+#endif
+	      call    __heap_initialize
 
               .section start, root, noreorder
 	      .extern __descriptor_list     ; initialize file descriptor list
 #ifdef __CALYPSI_DATA_MODEL_SMALL__
-	      move.l   (.near __descriptor_list,a4),a0
+	      lea     (.near __descriptor_list,a4),a0
 #else
-	      move.l   __descriptor_list,a0
+	      lea     __descriptor_list,a0
 #endif
 	      move.l   a0,8(a0)
 	      addq.l   #4,a0
 	      clr.l    (a0)
 	      move.l   a0,-(a0)
 
-	      .extern __argc, __argv, __arg_setup
-	      jsr     __arg_setup           ; set up arguments for main()
+              .section start, root, noreorder
+	      .extern __argc, __argv , __arg_setup
+	      call    __arg_setup   ; set up arguments for main()
 #ifdef __CALYPSI_DATA_MODEL_SMALL__
 	      move.l  (.near __argv,a4),a0
 	      move.l  (.near __argc,a4),d0
@@ -90,19 +104,15 @@ __call_heap_initialize:
 	      move.l  __argv,a0
 	      move.l  __argc,d0
 #endif
-              jsr     main
-              jmp     exit
+	      call    main
+	      jump    exit
 
 ;;; Initial chunk size for the heap. If you know you use very little
 ;;; heap you add a function __heap_chunk_size that returns a smaller
 ;;; number. If you know you are going to use a lot of heap, you can
 ;;; instead start with a larger number.
 
-#ifdef __CALYPSI_CODE_MODEL_SMALL__
-	      .section nearcode
-#else
-	      .section code
-#endif
+	      .section libcode
 	      .pubweak __heap_chunk_size
 __heap_chunk_size:
 	      move.l  #8192,d0
@@ -115,7 +125,7 @@ __heap_chunk_size:
 	      .align  2
 __original_sp:
 	      .space  4
-	      .section nearcode
+	      .section libcode
 _Stub_exit:
 	      move.l  (.near __original_sp,a4),sp
 	      rts
