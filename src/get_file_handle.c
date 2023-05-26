@@ -1,7 +1,7 @@
 #include "io.h"
 #include <proto/dos.h>
 
-int __get_file_handle(int fd) {
+BPTR __get_file_handle(int fd) {
   if (fd < 3) {
     if (fd == 0) {
       return Input();

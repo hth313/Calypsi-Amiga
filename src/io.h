@@ -16,6 +16,6 @@ extern struct MinList __descriptor_list;
 
 extern int __translate_io_error_to_errno(LONG io_err);
 extern int __translate_access_io_error_to_errno(LONG io_err);
-extern int __get_file_handle(int fd);
+extern BPTR __get_file_handle(int fd);
 
 #endif // __AMIGA_IO_H
