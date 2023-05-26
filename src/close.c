@@ -8,10 +8,9 @@
 
 int _Stub_close(int fd) {
   int offset = 3;
-  BPTR fdesc;
   for (struct __io_descriptors *p =
            (struct __io_descriptors *)__descriptor_list.mlh_Head;
-       p != 0;
+       p->node.mln_Succ != 0;
        p = (struct __io_descriptors *)p->node.mln_Succ,
 	 offset += DescriptorsInRecord) {
     int i = fd - offset;

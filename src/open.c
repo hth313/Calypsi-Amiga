@@ -19,10 +19,11 @@ int _Stub_open(const char *path, int oflag, ...) {
   struct __io_descriptors *node;
   for (struct __io_descriptors *p =
            (struct __io_descriptors *)__descriptor_list.mlh_Head;
-       p != 0 && desc < 0;
-       p = (struct __io_descriptors *)p->node.mln_Succ, offset += DescriptorsInRecord) {
+       p->node.mln_Succ != 0 && desc < 0;
+       p = (struct __io_descriptors *)p->node.mln_Succ,
+	 offset += DescriptorsInRecord) {
     if (p->used < DescriptorsInRecord) {
-      for (int i = 0;; i++) {
+      for (int i = 0; /*empty*/; i++) {
         if (p->desc[i] == 0) {
           desc = offset + i;
           storage = &p->desc[i];
@@ -55,6 +56,6 @@ int _Stub_open(const char *path, int oflag, ...) {
     return EOF;
   }
   *storage = handle;
-  node-> used += 1;
+  node->used += 1;
   return desc;
 }
