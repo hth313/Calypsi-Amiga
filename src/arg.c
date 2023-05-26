@@ -35,7 +35,6 @@
 
 /****************************************************************************/
 
-#include <assert.h>
 #include <stdbool.h>
 #include <setjmp.h>
 #include <stdlib.h>
@@ -308,9 +307,6 @@ void __arg_setup(void)
 				(*str++) = '\0';
 			}
 		}
-
-		assert( __argc == (int)number_of_arguments );
-		assert( str <= &command_line[arg_len] );
 
 		__argv[__argc] = NULL;
 
