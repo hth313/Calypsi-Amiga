@@ -103,12 +103,12 @@ void __arg_setup(void)
 	/* Shell startup? */
 	if(__WBenchMsg == NULL)
 	{
-		bool					expand_wildcard_args;
-		size_t					number_of_arguments;
+		bool			expand_wildcard_args;
+		size_t			number_of_arguments;
 		const unsigned char *	arg_str;
-		size_t					arg_len;
-		unsigned char *			command_line;
-		unsigned char *			str;
+		size_t			arg_len;
+		unsigned char *		command_line;
+		unsigned char *		str;
 
 		/* Check if wildcard expansion of command line parameters
 		   should be enabled. Note that the callback function, if
