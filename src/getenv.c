@@ -9,11 +9,11 @@
 // provided by AmigaOS, there is no need to implement
 // _Stub_environ() function.
 char *getenv(const char *name) {
-  struct LocalVar *var =
-    FindVar((STRPTR)name, GVF_GLOBAL_ONLY | GVF_LOCAL_ONLY);
-  if (var != 0) {
-    return (char *)var->lv_Value;
-  } else {
+  static char env_var_buffer[FILENAME_MAX];
+  if (GetVar((STRPTR)name, (STRPTR)env_var_buffer, sizeof(env_var_buffer), 0) < 0) {
+    __set_errno(__translate_io_error_to_errno(IoErr()));
     return 0;
+  } else {
+    return env_var_buffer;
   }
 }
