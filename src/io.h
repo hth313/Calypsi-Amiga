@@ -5,6 +5,7 @@
 #include <exec/lists.h>
 
 #define DescriptorsInRecord 32
+#define OffsetToFirstFD     3
 
 struct __io_descriptors {
   struct MinNode node;

@@ -14,7 +14,7 @@
 
 int _Stub_open(const char *path, int oflag, ...) {
   int desc = -1;
-  int offset = 3;
+  int offset = OffsetToFirstFD;
   BPTR *storage;
   struct __io_descriptors *node;
   for (struct __io_descriptors *p =

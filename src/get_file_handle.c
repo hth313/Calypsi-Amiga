@@ -11,7 +11,7 @@ BPTR __get_file_handle(int fd) {
       return ErrorOutput();
     }
   } else {
-    int offset = 3;
+    int offset = OffsetToFirstFD;
     BPTR fdesc;
     for (struct __io_descriptors *p =
            (struct __io_descriptors *)__descriptor_list.mlh_Head;

@@ -7,7 +7,7 @@
 #include <exec/lists.h>
 
 int _Stub_close(int fd) {
-  int offset = 3;
+  int offset = OffsetToFirstFD;
   for (struct __io_descriptors *p =
            (struct __io_descriptors *)__descriptor_list.mlh_Head;
        p->node.mln_Succ != 0;
