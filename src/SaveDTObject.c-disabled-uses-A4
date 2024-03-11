@@ -1,0 +1,11 @@
+#include <proto/datatypes.h>
+#include <utility/tagitem.h>
+#include <stdarg.h>
+
+ULONG SaveDTObject(Object *o, struct Window *win, struct Requester *req, CONST_STRPTR file, ULONG mode, LONG saveicon, ...) {
+  va_list ap;
+  va_start(ap, saveicon);
+  struct TagItem *taglist = va_arg(ap, struct TagItem *);
+  va_end(ap);
+  return SaveDTObjectA(o, win, req, file, mode, saveicon, taglist);
+}

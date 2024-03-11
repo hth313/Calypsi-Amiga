@@ -1,0 +1,11 @@
+#include <proto/wb.h>
+#include <utility/tagitem.h>
+#include <stdarg.h>
+
+struct AppIcon *AddAppIcon(ULONG id, ULONG userdata, CONST_STRPTR text, struct MsgPort *msgport, BPTR lock, struct DiskObject *diskobj, ...) {
+  va_list ap;
+  va_start(ap, diskobj);
+  CONST struct TagItem *taglist = va_arg(ap, CONST struct TagItem *);
+  va_end(ap);
+  return AddAppIconA(id, userdata, text, msgport, lock, diskobj, taglist);
+}

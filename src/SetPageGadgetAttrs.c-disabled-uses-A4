@@ -1,0 +1,11 @@
+#include <proto/layout.h>
+#include <utility/tagitem.h>
+#include <stdarg.h>
+
+ULONG SetPageGadgetAttrs(struct Gadget *gadget, Object *object, struct Window *window, struct Requester *requester, ...) {
+  va_list ap;
+  va_start(ap, requester);
+  struct TagItem *taglist = va_arg(ap, struct TagItem *);
+  va_end(ap);
+  return SetPageGadgetAttrsA(gadget, object, window, requester, taglist);
+}
