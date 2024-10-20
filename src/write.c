@@ -10,11 +10,10 @@ size_t _Stub_write(int fd, const void *buf, size_t count) {
   if (handle) {
     long result = Write(handle, buf, count);
     if (result == -1) {
-      __set_errno(__translate_io_error_to_errno(IoErr()));
+      return -(__translate_io_error_to_errno(IoErr()));
     }
     return result;
   } else {
-    __set_errno(ENOENT);
-    return EOF;
+    return -ENOENT;
   }
 }

@@ -10,7 +10,6 @@ int _Stub_rename(const char *oldpath, const char *newpath) {
   if (Rename((STRPTR)oldpath, (STRPTR)newpath) == DOSTRUE) {
     return 0;
   } else {
-    __set_errno(__translate_io_error_to_errno(IoErr()));
-    return EOF;
+    return -(__translate_io_error_to_errno(IoErr()));
   }
 }

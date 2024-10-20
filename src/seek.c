@@ -17,16 +17,14 @@ long _Stub_lseek(int fd, long offset, int whence) {
     else if (whence == OFFSET_END)
       whence = SEEK_END;
     else {
-      __set_errno(EINVAL);
-      return EOF;
+      return -EINVAL;
     }
     long result = Seek(handle, offset, whence);
     if (result == -1) {
-      __set_errno(__translate_io_error_to_errno(IoErr()));
+      return -(__translate_io_error_to_errno(IoErr()));
     }
     return result;
   } else {
-    __set_errno(ENOENT);
-    return EOF;
+    return -ENOENT;
   }
 }

@@ -37,8 +37,7 @@ int _Stub_open(const char *path, int oflag, ...) {
     // Ran out of descriptors, need a new record.
     node = (struct __io_descriptors *) malloc(sizeof(struct __io_descriptors));
     if (node == 0) {
-      __set_errno(ENOMEM);
-      return EOF;
+      return -ENOMEM;
     }
     memset(node, 0, sizeof(struct __io_descriptors));
     AddTail((struct List *)&__descriptor_list, (struct Node*) &node->node);
@@ -52,8 +51,7 @@ int _Stub_open(const char *path, int oflag, ...) {
 
   BPTR handle = Open((CONST_STRPTR)path, mode);
   if (handle == 0) {
-    __set_errno(__translate_io_error_to_errno(IoErr()));
-    return EOF;
+    return -(__translate_io_error_to_errno(IoErr()));
   }
   *storage = handle;
   node->used += 1;

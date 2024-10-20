@@ -10,7 +10,6 @@ int _Stub_remove(const char *path) {
   if (DeleteFile((STRPTR)path) == DOSTRUE) {
     return 0;
   } else {
-    __set_errno(__translate_io_error_to_errno(IoErr()));
-    return EOF;
+    return -(__translate_io_error_to_errno(IoErr()));
   }
 }

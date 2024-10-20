@@ -24,6 +24,5 @@ int _Stub_close(int fd) {
     }
   }
   // File does not exist
-  __set_errno(ENOENT);
-  return -1;
+  return -ENOENT;
 }
